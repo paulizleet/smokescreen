@@ -6,10 +6,19 @@ function crawl(){
     urls.push(linkObjects[i].href)
   }
 
-  var url = urls[Math.floor(Math.random()*urls.length)];
+  //this code will stop the looping if there are no available links to click.
+  if (urls.length > 0){
+    var url = urls[Math.floor(Math.random()*urls.length)];
 
-  var window2 = window
-  setTimeout(window2.location.replace(url), 5000)
+    var window2 = window;
+
+
+    setTimeout(window2.location.replace(url), 5000);
+
+   }
+  else{
+    alert("NO LINKS");
+  }
 };
 
 

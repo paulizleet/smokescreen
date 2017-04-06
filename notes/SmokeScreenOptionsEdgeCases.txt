@@ -9,7 +9,7 @@
 EdgeCases
 * No Download links (only html?)
 * No anchor links (maybe doesn’t matter)
-* Somethin if 404 or no links
+* Somethin if 404 or no links -- done
 * Noooo Email
 * If Infinite Loop
 *
