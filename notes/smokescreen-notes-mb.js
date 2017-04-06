@@ -1,4 +1,3 @@
-
 //get all urls from page
 var linkObjects = document.getElementsByTagName("a")
 var urls =[]
