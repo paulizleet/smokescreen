@@ -12,7 +12,7 @@
 
   "content_scripts": [
   {
-    "matches": ["*://*.simpleweb.org/*"],
+    "matches": ["*://*.simpleweb.org/*", "file:///Users*"],
     "js": ["smokescreen.js"]
   }
   ]
