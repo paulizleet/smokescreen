@@ -1,0 +1,15 @@
+﻿Possible Options
+* Limit redirecting to “trustworthy” websites
+* Number of Sessions
+* How often it redirects
+
+
+
+
+EdgeCases
+* No Download links (only html?)
+* No anchor links (maybe doesn’t matter)
+* Somethin if 404 or no links
+* Noooo Email
+* If Infinite Loop
+*

@@ -1,0 +1,19 @@
+{
+
+  "manifest_version": 2,
+  "name": "Smokescreen",
+  "version": "1.0",
+
+  "description": "redirects web pages",
+
+  "icons": {
+    "48": "icons/border-48.png"
+  },
+
+  "content_scripts": [
+  {
+    "matches": ["*://*.simpleweb.org/*"],
+    "js": ["smokescreen.js"]
+  }
+  ]
+}
