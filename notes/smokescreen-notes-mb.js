@@ -8,3 +8,4 @@ for (i = 0; i< linkObjects.length; i++){
   urls.push(linkObjects[i].href)
 }
 
+// url = undefined if no urls
