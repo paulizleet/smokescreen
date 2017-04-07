@@ -1,3 +1,22 @@
+var recentPages = JSON.parse(localStorage.getItem("recentPages"))
+var loopLength = 6
+
+function addToRecent(url) {
+  recentPages.push(url)
+}
+
+function isLoop(url) {
+  console.log(url)
+  addToRecent(url);
+  if (recentPages.length > loopLength) {
+    recentPages.shift();
+    recentPages.forEach(function(page) {
+      console.log(page)
+    })
+    return [...new Set(recentPages)].length == 2
+  }
+  return false
+}
 
 function pickUrl(urls){
   //urls = filter(urls);
@@ -8,15 +27,20 @@ function pickUrl(urls){
     return false;
    }
 
+   if (isLoop(url.href) == true){
+    console.log("this is a loop");
+    return false
+   }
+
   return url.href;
 };
+
 
 function getPageSource(url) {
 
   if(url == undefined){    return document;   }
 
   var xreq = new XMLHttpRequest();
-  console.log(url);
   xreq.open("get", url, false);
   xreq.send();
   return xreq.responseText;
@@ -25,14 +49,15 @@ function getPageSource(url) {
 function parseDoc(source){
   if(source == document){   return document;   }
   var parser = new DOMParser();
-  return parser.parseFromString(source, "application/xml");
+  return parser.parseFromString(source, "text/html");
 }
 
 function xcrawl(){
 
   var url;
-  for(var i = 0; i < 5; i++){
+  for(var i = 0; i < 15; i++){
     console.log(i);
+    console.log(url)
     var pageSource = getPageSource(url);
     doc = parseDoc(pageSource);
     url = pickUrl(doc.getElementsByTagName("a"));
