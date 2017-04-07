@@ -2,7 +2,7 @@
 function pickUrl(urls){
   //urls = filter(urls);
   var url = urls[Math.floor(Math.random()*urls.length)];
-
+  //debugger
   if(url == undefined){
     console.log("no urls to grab");
     return false;
@@ -10,6 +10,22 @@ function pickUrl(urls){
 
   return url.href;
 };
+
+function filterUrls(page){
+  list = page.getElementsByTagName("a");
+  debugger
+  for(var i = 0; i < list.length; i++){
+    if(list[i].href.match(/(.tar|.exe|.zip|.pdf|.wav|.txt).*/) == null)
+    {
+      console.log(list[i]);
+    }
+    else{
+      list[i].remove();
+    }
+  }
+
+  return list;
+}
 
 function getPageSource(url) {
 
@@ -25,7 +41,7 @@ function getPageSource(url) {
 function parseDoc(source){
   if(source == document){   return document;   }
   var parser = new DOMParser();
-  return parser.parseFromString(source, "application/xml");
+  return parser.parseFromString(source, "text/html");
 }
 
 function xcrawl(){
@@ -35,7 +51,10 @@ function xcrawl(){
     console.log(i);
     var pageSource = getPageSource(url);
     doc = parseDoc(pageSource);
-    url = pickUrl(doc.getElementsByTagName("a"));
+    //test line:
+    filter = filterUrls(doc);
+
+    url = pickUrl(filter);
 
     if(url == ""){  continue; }
 
