@@ -7,7 +7,7 @@ function pickUrl(urls){
     console.log("no urls to grab");
     return false;
    }
-
+  console.log(url);
   return url.href;
 };
 
@@ -23,25 +23,37 @@ function getPageSource(url) {
 }
 
 function parseDoc(source){
-  if(source == document){   return document;   }
+
+  if(source == document){   return source;   }
+
   var parser = new DOMParser();
-  return parser.parseFromString(source, "application/xml");
+  parsed = parser.parseFromString(source, "text/html");
+  console.log(parsed);
+  dump(parsed.documentElement.nodeName == "parsererror" ? "error while parsing" : parsed.documentElement.nodeName);
+  return parsed;
 }
 
 function xcrawl(){
 
   var url;
-  for(var i = 0; i < 5; i++){
+  var pageSource;
+  var doc;
+  var urls;
+  for(var i = 0; i < 100; i++){
     console.log(i);
-    var pageSource = getPageSource(url);
+
+    pageSource = getPageSource(url);
     doc = parseDoc(pageSource);
-    url = pickUrl(doc.getElementsByTagName("a"));
+    urls = doc.getElementsByTagName("a");
+    console.log("We now have " + urls.length + " urls");
+    url = pickUrl(urls);
 
     if(url == ""){  continue; }
 
     //if(url == false){ return url; }
 
   }
+  console.log("done");
   return false;
 }
 
