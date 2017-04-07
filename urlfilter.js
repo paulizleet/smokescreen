@@ -1,23 +1,14 @@
-
-function pickUrl(urls){
-
-  var url = urls[Math.floor(Math.random()*urls.length)];
-  if(url == undefined){
-    console.log("no urls to grab");
-    return false;
-   }
-
-  return url.href;
-};
-
 function filterUrls(page){
+  //filter creates our HTML Collection of links.
   list = page.getElementsByTagName("a");
+
   for(var i = 0; i < list.length; i++){
     if(list[i].href.match(/(.tar|.exe|.zip|.pdf|.wav|.txt).*/) == null)
-    {
+    {//just push forward if current link doesn't hold unaccepted file extension
      continue;
     }
     else{
+      //remove from list of links otherwise.
       list[i].remove();
     }
   }
@@ -49,12 +40,9 @@ function xcrawl(){
     console.log(i);
     var pageSource = getPageSource(url);
     doc = parseDoc(pageSource);
-    //test line:
+    //filter takes a parsed document.
     filter = filterUrls(doc);
-
-    url = pickUrl(filter);
-    if(url == ""){  continue; }
-
+    return filter;
   }
   return false;
 }
