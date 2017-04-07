@@ -1,3 +1,22 @@
+var recentPages = JSON.parse(localStorage.getItem("recentPages"))
+var loopLength = 6
+
+function addToRecent(url) {
+  recentPages.push(url)
+}
+
+function isLoop(url) {
+  console.log(url)
+  addToRecent(url);
+  if (recentPages.length > loopLength) {
+    recentPages.shift();
+    recentPages.forEach(function(page) {
+      console.log(page)
+    })
+    return [...new Set(recentPages)].length == 2
+  }
+  return false
+}
 
 function pickUrl(urls){
   //urls = filter(urls);
@@ -7,16 +26,21 @@ function pickUrl(urls){
     console.log("no urls to grab");
     return false;
    }
-  console.log(url);
+
+
+   if (isLoop(url.href) == true){
+    console.log("this is a loop");
+    return false
+   }
   return url.href;
 };
+
 
 function getPageSource(url) {
 
   if(url == undefined){    return document;   }
 
   var xreq = new XMLHttpRequest();
-  console.log(url);
   xreq.open("get", url, false);
   xreq.send();
   return xreq.responseText;
@@ -27,15 +51,17 @@ function parseDoc(source){
   if(source == document){   return source;   }
 
   var parser = new DOMParser();
+
   parsed = parser.parseFromString(source, "text/html");
   console.log(parsed);
   dump(parsed.documentElement.nodeName == "parsererror" ? "error while parsing" : parsed.documentElement.nodeName);
-  return parsed;
+
 }
 
 function xcrawl(){
 
   var url;
+
   var pageSource;
   var doc;
   var urls;
@@ -43,6 +69,7 @@ function xcrawl(){
     console.log(i);
 
     pageSource = getPageSource(url);
+
     doc = parseDoc(pageSource);
     urls = doc.getElementsByTagName("a");
     console.log("We now have " + urls.length + " urls");
