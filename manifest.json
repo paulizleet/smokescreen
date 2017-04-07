@@ -12,13 +12,19 @@
 
   "content_scripts": [
     {
-      "matches": ["*://*.simpleweb.org/*", "file:///Users*"],
-      "js": ["indicator.js","smokescreen.js"]
+      "matches": ["*://*.reddit.com/*", "*://*.simpleweb.org/*", "file:///Users*"],
+      "js": ["axios.js", "jquery.js", "indicator.js","smokescreen.js"]
     }
   ],
-
+  "permissions":[
+    "webRequest"
+  ],
 
   "background": {
-    "scripts": ["smokescreen.js"]
-  }
+    "scripts": ["jquery.js", "overlord.js", "bundle.js"]
+  },
+  "web_accessible_resources":[
+    "smokescreen.js",
+    "starting-page.html"
+  ]
 }

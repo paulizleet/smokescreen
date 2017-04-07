@@ -1,8 +1,19 @@
-var recentPages = JSON.parse(localStorage.getItem("recentPages"))
+var recentPages = JSON.parse(localStorage.getItem("recentPages")) || []
 var loopLength = 6
 
 function addToRecent(url) {
   recentPages.push(url)
+}
+
+function handleResponse(){
+  console.log("OK");
+  console.log(this);
+}
+
+function handleXhrErrors(){
+  console.log("errors");
+  console.log(this);
+  console.log(this.responseText);
 }
 
 function isLoop(url) {
@@ -35,15 +46,32 @@ function pickUrl(urls){
   return url.href;
 };
 
+function getPageSourceXHR(url) {
 
-function getPageSource(url) {
-
-  if(url == undefined){    return document;   }
+  if(url == undefined){    return document }
 
   var xreq = new XMLHttpRequest();
+  console.log(url);
   xreq.open("get", url, false);
+  xreq.withCredentials = true;
+  xreq.onload = handleResponse;
+  xreq.onerror = handleXhrErrors;
+  xreq.ontimeout = handleXhrErrors;
+  //  xreq.setRequestHeader('Access-Control-Allow-Origin', true)
   xreq.send();
   return xreq.responseText;
+}
+
+function getPageSourceAxios(url){
+  if(url == undefined){    url=browser.runtime.getURL("starting-page.html") }
+  try{  request = axios.get(url);
+  } catch (e) {
+    console.log(e);
+  }
+  request = axios.get(url);
+  console.log("debuggin");
+
+  return request
 }
 
 function parseDoc(source){
@@ -54,21 +82,27 @@ function parseDoc(source){
 
   parsed = parser.parseFromString(source, "text/html");
   console.log(parsed);
-  dump(parsed.documentElement.nodeName == "parsererror" ? "error while parsing" : parsed.documentElement.nodeName);
-
+  return parsed;
 }
 
 function xcrawl(){
-
+  console.log("Crawling");
   var url;
 
   var pageSource;
   var doc;
   var urls;
-  for(var i = 0; i < 100; i++){
+  for(var i = 0; i < 5; i++){
     console.log(i);
+    console.log(url);
 
-    pageSource = getPageSource(url);
+    try{
+      pageSource = getPageSourceAxios(url);
+    } catch (error){
+      console.log("woops");
+      console.log(error);
+      console.log(url);
+    }
 
     doc = parseDoc(pageSource);
     urls = doc.getElementsByTagName("a");
@@ -77,12 +111,10 @@ function xcrawl(){
 
     if(url == ""){  continue; }
 
-    //if(url == false){ return url; }
+    if(url == false){ return url; }
 
   }
   console.log("done");
   return false;
 }
-
-
 xcrawl();
