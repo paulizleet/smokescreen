@@ -6,17 +6,18 @@ function addToRecent(url) {
 }
 
 function isLoop(url) {
-  console.log(url)
   addToRecent(url);
   if (recentPages.length > loopLength) {
     recentPages.shift();
-    recentPages.forEach(function(page) {
-      console.log(page)
-    })
     return [...new Set(recentPages)].length == 2
   }
   return false
 }
+
+function isEmail(url) {
+  return url.substring(0,7) =="mailto:"
+}
+
 
 function pickUrl(urls){
   //urls = filter(urls);
@@ -27,11 +28,16 @@ function pickUrl(urls){
     return false;
    }
 
-
-   if (isLoop(url.href) == true){
+  if (isLoop(url.href) == true){
     console.log("this is a loop");
     return false
    }
+
+  if (isEmail(url.href) == true) {
+    console.log("this is an email");
+    return false
+   }
+
   return url.href;
 };
 
@@ -52,10 +58,9 @@ function parseDoc(source){
 
   var parser = new DOMParser();
 
-  parsed = parser.parseFromString(source, "text/html");
-  console.log(parsed);
+  parsed = parser.parseFromString(source, "text/html");;
   dump(parsed.documentElement.nodeName == "parsererror" ? "error while parsing" : parsed.documentElement.nodeName);
-
+  return parsed
 }
 
 function xcrawl(){
@@ -72,8 +77,8 @@ function xcrawl(){
 
     doc = parseDoc(pageSource);
     urls = doc.getElementsByTagName("a");
-    console.log("We now have " + urls.length + " urls");
     url = pickUrl(urls);
+    console.log("our url is "+url)
 
     if(url == ""){  continue; }
 
